@@ -1,7 +1,7 @@
 type Status = "toDo" | "Doing" | "Done"; //union type - status of each task
 type label = "Green" | "Blue" | "Red" | "Yellow" //union type - lables
 
-const mystatus: Status = "toDo";
+
 
 //product type
 
@@ -99,4 +99,5 @@ class Tasks{
 
 
 
+}
 }
