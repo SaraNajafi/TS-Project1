@@ -38,8 +38,8 @@ class Tasks{
     deleteTaskByTitle(title: String){
         let message:string =""
         const index = this.tasksArray.findIndex(task => task.title === title);
-        if(index == -1){
-            message =`Task with title ${title} does not exist!`;
+        if(index === -1){
+            message =`Task with this title ${title} does not exist!`;
 
         }else{
             this.tasksArray.splice(index, 1);
