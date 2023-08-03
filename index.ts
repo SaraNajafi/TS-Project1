@@ -48,6 +48,20 @@ class Tasks{
         return message;
     }
 
+
+    addLabel(label:label, title:String){
+        let message="";
+        const index = this.tasksArray.findIndex(task => task.title === title);
+        if(index === -1){
+            message= `Task with title ${title} already exists`;
+        }else{
+            const task = this.tasksArray[index];
+            task?.lable.push(label);
+            message=`label ${label} added successfully to task with title ${title}!`;
+            //const labelArray = task?.lable; //chera inja khodesh pishnahad dad alamat soAl bezaram?
+        }
+        return message;
+
+
 }
 
-const task1 = new Tasks(task);
