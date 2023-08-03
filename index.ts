@@ -102,7 +102,9 @@ class Tasks{
                 message= `Task with title ${title} has no lable ${lable}`;
             }else{
             task?.lable.splice(indexForRemove,1);
+            message = `Lable ${lable} deleted from  ${title} Card`;
             }
+            return message;
 
     }
 
@@ -169,10 +171,16 @@ async function main(){
              //console.log('Tasks array:', newTask.tasksArray);
              const lable_input = await getInput('Enter lable to add: ');
              const message1 = newTask.addlable(lable_input as lable, titleToAddLable);
+             console.log(message1);
              //console.log(newTask.tasksArray[0]?.lable);
             break;
             case 'DeleteLable':
-                const titleToDelete = await getInput('Enter task title to Delete lables
+                const titleToDeleteLable = await getInput('Enter task title to Delete lables:');
+                const lableInputToDelete = await getInput('Enter lable to delete: ');
+                const message2 = newTask.deletelable(lableInputToDelete as lable, titleToDeleteLable);
+                console.log(message2)
+
+
           default:
             console.log('Unknown command. Try again.');
         }

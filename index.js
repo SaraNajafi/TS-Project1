@@ -66,7 +66,7 @@ var Tasks = /** @class */ (function () {
     Tasks.prototype.deleteTaskByTitle = function (title) {
         var message = "";
         var index = this.tasksArray.findIndex(function (task) { return task.title === title; });
-        console.log("".concat(title, " and ").concat(index));
+        //console.log(`${title} and ${index}`);
         if (index === -1) {
             message = "Task with this title ".concat(title, " does not exist!");
         }
@@ -80,9 +80,9 @@ var Tasks = /** @class */ (function () {
         var _a;
         console.log((_a = this.tasksArray[0]) === null || _a === void 0 ? void 0 : _a.title);
         var message = "";
-        console.log(title);
+        //console.log(title);
         var index = this.tasksArray.findIndex(function (task) { return task.title === title; });
-        console.log(index);
+        //console.log(index);
         if (index === -1) {
             message = "Task with title ".concat(title, " already exists");
         }
@@ -130,43 +130,44 @@ function getInput(prompt) {
     });
 }
 function main() {
-    var _a, _b;
+    var _a;
     return __awaiter(this, void 0, void 0, function () {
-        var newTask, command, _c, title, deadline, status_1, lableInput, lables, task_3, removeTitle, message, titleToEdit, lable_input, message1;
-        return __generator(this, function (_d) {
-            switch (_d.label) {
+        var newTask, command, _b, title, deadline, status_1, lableInput, lables, task_3, removeTitle, message, titleToAddLable, lable_input, message1, titleToDeleteLable, lableInputToDelete, message2;
+        return __generator(this, function (_c) {
+            switch (_c.label) {
                 case 0:
                     newTask = new Tasks();
-                    _d.label = 1;
+                    _c.label = 1;
                 case 1:
-                    if (!true) return [3 /*break*/, 15];
+                    if (!true) return [3 /*break*/, 18];
                     return [4 /*yield*/, getInput('Enter a command (AddTask, RemoveTask, AddLable, DeleteLabel or exit to quiet : ')];
                 case 2:
-                    command = _d.sent();
+                    command = _c.sent();
                     if (command === 'exit') {
                         console.log('Goodbye!');
                         rl.close();
-                        return [3 /*break*/, 15];
+                        return [3 /*break*/, 18];
                     }
-                    _c = command;
-                    switch (_c) {
+                    _b = command;
+                    switch (_b) {
                         case 'AddTask': return [3 /*break*/, 3];
                         case 'RemoveTask': return [3 /*break*/, 8];
                         case 'AddLable': return [3 /*break*/, 10];
+                        case 'DeleteLable': return [3 /*break*/, 13];
                     }
-                    return [3 /*break*/, 13];
+                    return [3 /*break*/, 16];
                 case 3: return [4 /*yield*/, getInput('Enter task title: ')];
                 case 4:
-                    title = _d.sent();
+                    title = _c.sent();
                     return [4 /*yield*/, getInput('Enter task deadline: ')];
                 case 5:
-                    deadline = _d.sent();
+                    deadline = _c.sent();
                     return [4 /*yield*/, getInput('Enter task status: ')];
                 case 6:
-                    status_1 = _d.sent();
+                    status_1 = _c.sent();
                     return [4 /*yield*/, getInput('Enter lables (comma-separated): ')];
                 case 7:
-                    lableInput = _d.sent();
+                    lableInput = _c.sent();
                     lables = lableInput.split(',').map(function (lable) { return lable.trim(); });
                     task_3 = {
                         title: title,
@@ -176,29 +177,37 @@ function main() {
                     };
                     newTask.addTask(task_3);
                     console.log('Task added successfully!' + ((_a = newTask.tasksArray[0]) === null || _a === void 0 ? void 0 : _a.title));
-                    return [3 /*break*/, 14];
+                    return [3 /*break*/, 17];
                 case 8: return [4 /*yield*/, getInput('Enter task title to Delete: ')];
                 case 9:
-                    removeTitle = _d.sent();
+                    removeTitle = _c.sent();
                     message = newTask.deleteTaskByTitle(removeTitle);
                     console.log(message);
-                    return [3 /*break*/, 14];
+                    return [3 /*break*/, 17];
                 case 10: return [4 /*yield*/, getInput('Enter task title to Add lables: ')];
                 case 11:
-                    titleToEdit = _d.sent();
-                    console.log('Entered title:', titleToEdit);
-                    console.log('Tasks array:', newTask.tasksArray);
+                    titleToAddLable = _c.sent();
                     return [4 /*yield*/, getInput('Enter lable to add: ')];
                 case 12:
-                    lable_input = _d.sent();
-                    message1 = newTask.addlable(lable_input, titleToEdit);
-                    console.log((_b = newTask.tasksArray[0]) === null || _b === void 0 ? void 0 : _b.lable);
-                    _d.label = 13;
-                case 13:
+                    lable_input = _c.sent();
+                    message1 = newTask.addlable(lable_input, titleToAddLable);
+                    console.log(message1);
+                    //console.log(newTask.tasksArray[0]?.lable);
+                    return [3 /*break*/, 17];
+                case 13: return [4 /*yield*/, getInput('Enter task title to Delete lables:')];
+                case 14:
+                    titleToDeleteLable = _c.sent();
+                    return [4 /*yield*/, getInput('Enter lable to delete: ')];
+                case 15:
+                    lableInputToDelete = _c.sent();
+                    message2 = newTask.deletelable(lableInputToDelete, titleToDeleteLable);
+                    console.log(message2);
+                    _c.label = 16;
+                case 16:
                     console.log('Unknown command. Try again.');
-                    _d.label = 14;
-                case 14: return [3 /*break*/, 1];
-                case 15: return [2 /*return*/];
+                    _c.label = 17;
+                case 17: return [3 /*break*/, 1];
+                case 18: return [2 /*return*/];
             }
         });
     });
