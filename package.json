@@ -1,0 +1,15 @@
+{
+  "dependencies": {
+    "typescript": "^5.1.6"
+  },
+  "name": "ts-project1",
+  "description": "Rahnema-ts-project",
+  "version": "1.0.0",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
