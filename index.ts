@@ -1,8 +1,9 @@
+import { stringify } from 'querystring';
 import * as readline from 'readline';
 import { IndentStyle } from 'typescript';
 
 
-type Status = "toDo" | "Doing" | "Done"; //union type - status of each task
+//type Status = 'toDo' | "Doing" | "Done"; //union type - status of each task
 type lable = "Green" | "Blue" | "Red" | "Yellow" //union type - lables
 
 
@@ -10,107 +11,132 @@ type lable = "Green" | "Blue" | "Red" | "Yellow" //union type - lables
 //product type
 
 type myDate = "Saturday"| "Sunday" | "Monday"| "Tuesday" | "Wednesday" | "Thursday" | "Friday"
-type Task = {
+type BaseTask = {
     title: String,
     deadline: myDate,
     lable: Array<lable>,
-    status: Status
+    // status: Status,
 };
 
-
-const task: Task = {
-    title: "Watch Video",
-    deadline: "Saturday",
-    lable: ["Green"],
-    status: "toDo",
-
-
+type Done = BaseTask & {
+    status: "Done"
+    startDate: myDate,
+}
+type toDo = BaseTask & {
+    status: "toDo"
 }
 
-class Tasks{
+type Doing = BaseTask & {
+    satatus: "Doing"
+    endDate: myDate
+}
+
+type Task = Done | toDo | Doing
+
+// const t: Task1 = {
+//     title: "",
+//     satatus: "Doing",
+//     startDate: "Friday",
+//     deadline: "Friday",
+// }
+
+
+
+class TaskManager {
     public tasksArray: Task[]=[]; // An array that all keep all tasks
     constructor(){
         this.addTask = this.addTask.bind(this);
     }
 
 //title:String, deadline:myDate, lable: Array<lable>, status:Status
-    addTask(task:Task){
+    addTask(task:Doing){
         this.tasksArray.push(task);
 
     }
 
 
-    // isTaskExist(title:String){
-    //     let message:string =""
-    //     const index = this.tasksArray.findIndex(task => task.title === title);
-    //     if(index === -1){
-    //         message =`Task with this title ${title} does not exist!`;
+  
+    findByTitle(title:String){
+        const index = this.tasksArray.findIndex(task =>task.title === title);
+        return index;
+    }
 
-    //     }else{
-    //         this.tasksArray.splice(index, 1);
-    //         message=`Task with title ${title} deleted successfully!`;
-    //     }
-    //     return message;
-    // }
-
-
-
-    deleteTaskByTitle(title: String){// in method kar nemikone va nemidonam chera :D
-        let message:string =""
-        const index = this.tasksArray.findIndex(task => task.title === title);
-        //console.log(`${title} and ${index}`);
-        if(index === -1){
-            message =`Task with this title ${title} does not exist!`;
-        }else{
+    deleteTaskByTitle(title: String){
+        const index = this.findByTitle(title);
+        if(index !== -1){
             this.tasksArray.splice(index, 1);
-            message=`Task with title ${title} deleted successfully!`;
+            return true;
+        }else{
+            return false;
         }
-        return message;
     }
 
 
     addlable(lable:lable, title:String){
-        console.log(this.tasksArray[0]?.title);
-        
-        let message="";
-        //console.log(title);
-        
-        const index = this.tasksArray.findIndex(task => task.title === title);
-        //console.log(index);
-        if(index === -1){
-            message= `Task with title ${title} already exists`;
-        }else{
+        const index = this.findByTitle(title)
+        if(index !== -1){
             const task = this.tasksArray[index];
             task?.lable.push(lable);
-            message=`lable ${lable} added successfully to task with title ${title}!`;
-            //const lableArray = task?.lable; //chera inja khodesh pishnahad dad alamat soAl bezaram?
+            return true;
+        }else{
+            return false    
         }
-        return message;
 
 
 }
 
     deletelable(lable: lable, title:String){
-        let message="";
-        const index = this.tasksArray.findIndex(task => task.title === title);
-        if(index === -1){
-            message= `Task with title ${title} already exists`;
-        }else{
+        const index = this.findByTitle(title);
+        if(index !== -1){
             const task = this.tasksArray[index];
             const indexForRemove = task?.lable.indexOf(lable);
-            if(indexForRemove===undefined){
-                message= `Task with title ${title} has no lable ${lable}`;
+            if(indexForRemove !==undefined){
+                task?.lable.splice(indexForRemove,1);
+                return true;
             }else{
-            task?.lable.splice(indexForRemove,1);
-            message = `Lable ${lable} deleted from  ${title} Card`;
+                return false;
             }
-            return message;
-
-    }
+        }else{
+            return false;
+         }
 
 
 
 }
+    changeStatus(newStatus:Status,title:String){
+        const index = this.findByTitle(title);
+        if(index !== -1){ //inja check mikonim ke hatman bashe. chera majbooram mikone yedor dge check konam bebinam ke hatman hast ya na?
+            const taskToChangeStatus = this.tasksArray[index];
+            if(taskToChangeStatus){
+                taskToChangeStatus.status = newStatus;
+                return true;
+            }
+            
+        }
+        else{
+            return false;
+        }
+    }
+
+    filterBy(what:{title?: string , status?:Status, lable?: lable}): Task[]{
+        return this.tasksArray.filter(task => {
+            let meet = true;
+            if(what.title && what.title !== task.title){
+                meet = false;
+            }else if(what.status && what.status !==task.status){
+                meet = false;
+            }else if(what.lable && !task.lable.includes(what.lable)){
+                meet = false;
+            }
+            return meet;
+
+        });
+    }
+    
+
+
+
+
 }
 
 
@@ -131,7 +157,7 @@ async function getInput(prompt: string): Promise<string> {
   }
 
 async function main(){
-    const newTask = new Tasks(); 
+    const newTask = new TaskManager(); 
     while (true) {
         const command = await getInput('Enter a command (AddTask, RemoveTask, AddLable, DeleteLabel or exit to quiet : ');
     
@@ -168,7 +194,7 @@ async function main(){
            case 'AddLable':
              const titleToAddLable = await getInput('Enter task title to Add lables: ');
              //console.log('Entered title:', titleToEdit);
-             //console.log('Tasks array:', newTask.tasksArray);
+             //console.log('TaskMa array:', newTask.tasksArray);
              const lable_input = await getInput('Enter lable to add: ');
              const message1 = newTask.addlable(lable_input as lable, titleToAddLable);
              console.log(message1);

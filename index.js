@@ -37,19 +37,13 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var readline = require("readline");
-var task = {
-    title: "Watch Video",
-    deadline: "Saturday",
-    lable: ["Green"],
-    status: "toDo",
-};
-var Tasks = /** @class */ (function () {
-    function Tasks() {
+var TaskManager = /** @class */ (function () {
+    function TaskManager() {
         this.tasksArray = []; // An array that all keep all tasks
         this.addTask = this.addTask.bind(this);
     }
     //title:String, deadline:myDate, lable: Array<lable>, status:Status
-    Tasks.prototype.addTask = function (task) {
+    TaskManager.prototype.addTask = function (task) {
         this.tasksArray.push(task);
     };
     // isTaskExist(title:String){
@@ -63,7 +57,7 @@ var Tasks = /** @class */ (function () {
     //     }
     //     return message;
     // }
-    Tasks.prototype.deleteTaskByTitle = function (title) {
+    TaskManager.prototype.deleteTaskByTitle = function (title) {
         var message = "";
         var index = this.tasksArray.findIndex(function (task) { return task.title === title; });
         //console.log(`${title} and ${index}`);
@@ -76,7 +70,7 @@ var Tasks = /** @class */ (function () {
         }
         return message;
     };
-    Tasks.prototype.addlable = function (lable, title) {
+    TaskManager.prototype.addlable = function (lable, title) {
         var _a;
         console.log((_a = this.tasksArray[0]) === null || _a === void 0 ? void 0 : _a.title);
         var message = "";
@@ -87,31 +81,33 @@ var Tasks = /** @class */ (function () {
             message = "Task with title ".concat(title, " already exists");
         }
         else {
-            var task_1 = this.tasksArray[index];
-            task_1 === null || task_1 === void 0 ? void 0 : task_1.lable.push(lable);
+            var task = this.tasksArray[index];
+            task === null || task === void 0 ? void 0 : task.lable.push(lable);
             message = "lable ".concat(lable, " added successfully to task with title ").concat(title, "!");
             //const lableArray = task?.lable; //chera inja khodesh pishnahad dad alamat soAl bezaram?
         }
         return message;
     };
-    Tasks.prototype.deletelable = function (lable, title) {
+    TaskManager.prototype.deletelable = function (lable, title) {
         var message = "";
         var index = this.tasksArray.findIndex(function (task) { return task.title === title; });
         if (index === -1) {
             message = "Task with title ".concat(title, " already exists");
         }
         else {
-            var task_2 = this.tasksArray[index];
-            var indexForRemove = task_2 === null || task_2 === void 0 ? void 0 : task_2.lable.indexOf(lable);
+            var task = this.tasksArray[index];
+            var indexForRemove = task === null || task === void 0 ? void 0 : task.lable.indexOf(lable);
             if (indexForRemove === undefined) {
                 message = "Task with title ".concat(title, " has no lable ").concat(lable);
             }
             else {
-                task_2 === null || task_2 === void 0 ? void 0 : task_2.lable.splice(indexForRemove, 1);
+                task === null || task === void 0 ? void 0 : task.lable.splice(indexForRemove, 1);
+                message = "Lable ".concat(lable, " deleted from  ").concat(title, " Card");
             }
+            return message;
         }
     };
-    return Tasks;
+    return TaskManager;
 }());
 // Creating an interface for interacting with user
 var rl = readline.createInterface({
@@ -132,11 +128,11 @@ function getInput(prompt) {
 function main() {
     var _a;
     return __awaiter(this, void 0, void 0, function () {
-        var newTask, command, _b, title, deadline, status_1, lableInput, lables, task_3, removeTitle, message, titleToAddLable, lable_input, message1, titleToDeleteLable, lableInputToDelete, message2;
+        var newTask, command, _b, title, deadline, status_1, lableInput, lables, task, removeTitle, message, titleToAddLable, lable_input, message1, titleToDeleteLable, lableInputToDelete, message2;
         return __generator(this, function (_c) {
             switch (_c.label) {
                 case 0:
-                    newTask = new Tasks();
+                    newTask = new TaskManager();
                     _c.label = 1;
                 case 1:
                     if (!true) return [3 /*break*/, 18];
@@ -169,13 +165,13 @@ function main() {
                 case 7:
                     lableInput = _c.sent();
                     lables = lableInput.split(',').map(function (lable) { return lable.trim(); });
-                    task_3 = {
+                    task = {
                         title: title,
                         deadline: deadline,
                         lable: lables,
                         status: status_1,
                     };
-                    newTask.addTask(task_3);
+                    newTask.addTask(task);
                     console.log('Task added successfully!' + ((_a = newTask.tasksArray[0]) === null || _a === void 0 ? void 0 : _a.title));
                     return [3 /*break*/, 17];
                 case 8: return [4 /*yield*/, getInput('Enter task title to Delete: ')];
